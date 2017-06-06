@@ -60,9 +60,7 @@ TouchSlope是系统所能识别出的可以被认为是滑动的最小距离，�
 1、 VelocityTracker：用于追踪手指在滑动过程中的速度，包括水平和垂直方向上的速度。
 
 VelocityTracker的使用方式：
-
-
-
+```
 	//初始化
 	VelocityTracker mVelocityTracker = VelocityTracker.obtain();
 
@@ -78,12 +76,7 @@ VelocityTracker的使用方式：
 	mVelocityTracker.clear(); //一般在MotionEvent.ACTION_UP的时候调用
 
 	mVelocityTracker.recycle(); //一般在onDetachedFromWindow中调用
-	
-	
-
-
-
-
+```
 
 速度的计算公式：
 
@@ -92,14 +85,10 @@ VelocityTracker的使用方式：
 速度可能为负值，例如当手指从屏幕右边往左边滑动的时候。此外，速度是单位时间内移动的像素数，单位时间不一定是1秒钟，可以使用方法computeCurrentVelocity(xxx)指定单位时间是多少，单位是ms。例如通过computeCurrentVelocity(1000)来获取速度，手指在1s中滑动了100个像素，那么速度是100，即100(像素/1000ms)。如果computeCurrentVelocity(100)来获取速度，在100ms内手指只是滑动了10个像素，那么速度是10，即10(像素/100ms)。
 
 当不需要的时候，需要调用clear方法来重置并回收内存
-
-
-
+```
 	velocityTracker.clear();
 	velocityTracker.recycler();
-	
-	
-
+```
 
 2、GestureDetector
 
@@ -165,8 +154,7 @@ Scroller的工作原理：Scroller本身并不能实现view的滑动，它需要
 在dispatchTouchEvent方法中调用，用来处理点击事件，返回结果表示是否消耗当前的事件，如果不消耗，则在同一个事件序列中，当前View无法再次接受到事件。
 
 这三个方法的关系可以用如下伪代码表示：
-
-
+```
 	public boolean dispatchTouchEvent(MotionEvent event)
 	{
 		boolean consume = false;
@@ -180,8 +168,7 @@ Scroller的工作原理：Scroller本身并不能实现view的滑动，它需要
 		}
 		return consume;
 	}
-	
-
+```
 
 我们可以大致了解点击事件的传递规则：对于一个根ViewGroup来说，点击事件产生后，首先会传递给它，这时它的dispatchTouchEvent会被调用，如果这个ViewGroup的onInterceptTouchEvent方法返回true就表示它要拦截当前事件，接着事件就会交给这个ViewGroup处理，即它的onTouchEvent方法就会被调用；如果这个ViewGroup的onInterceptTouchEvent方法返回false就表示它不拦截当前事件，这时当前事件就会继续传递给它的子元素，接着子元素的dispatchTouchEvent方法就会被调用，如此反复直到事件被最终处理。
 
@@ -221,12 +208,11 @@ Scroller的工作原理：Scroller本身并不能实现view的滑动，它需要
 * 外部拦截法
 
 点击事件都经过父容器的拦截处理，如果父容器需要此事件就拦截，如果不需要此事件就不拦截，该方法需要重写父容器的onInterceptTouchEvent方法，在内部做相应的拦截即可，伪代码如下：
-
+```
 	public boolean onInterceptTouchEvent(MotionEvent event) {
     	boolean intercepted = false;
     	int x = (int) event.getX();
    		int y = (int) event.getY();
-
     	switch (event.getAction()) {
     	case MotionEvent.ACTION_DOWN: {
     	    intercepted = false;
@@ -255,15 +241,14 @@ Scroller的工作原理：Scroller本身并不能实现view的滑动，它需要
 
     	return intercepted;
 	}
-
+```
 * 内部拦截法
 
 父容器不拦截任何事件，所有的事件都传递给子元素，如果子元素需要此事件就直接消耗掉，否则就由父容器进行处理，这种方法和Android中的事件分发机制不一样，需要配合requestDisallowInterceptTouchEvent方法才能正常工作。
-
+```
 	public boolean dispatchTouchEvent(MotionEvent event) {
     	int x = (int) event.getX();
     	int y = (int) event.getY();
-
     	switch (event.getAction()) {
     	case MotionEvent.ACTION_DOWN: {]
     	    getParent().requestDisallowInterceptTouchEvent(true);
@@ -283,24 +268,18 @@ Scroller的工作原理：Scroller本身并不能实现view的滑动，它需要
     	default:
         	break;
     	}
-
     	mLastX = x;
     	mLastY = y;
     	return super.dispatchTouchEvent(event);
 	}
-	
-	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //父元素的拦截方法修改如下：
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+       int action event.getAction();
+       if (action == MotionEvent.ACTION_DOWN) {
+           return false;
+       } else {
+           return true;
+       }
+   }
+```	
