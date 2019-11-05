@@ -74,6 +74,8 @@
 
 Activity的堆栈管理以ActivityRecord为单位,所有的ActivityRecord都放在一个List里面.可以认为一个ActivityRecord就是一个Activity栈
 
+[Android面试官装逼失败之：Activity的启动模式](https://juejin.im/post/59b0f25551882538cb1ecae1)
+
 ---
 
 **Activity缓存方法。**
