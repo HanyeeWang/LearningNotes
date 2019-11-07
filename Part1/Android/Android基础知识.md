@@ -274,6 +274,7 @@ public void onRestoreInstanceState(Bundle savedInstanceState) {
 
 **大招: 放一个像素在前台(手机QQ)**
 
+**大招: 在后台播放无声音乐文件**
 ---
 
 
